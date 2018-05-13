@@ -8,7 +8,8 @@
     "build": "webpack --progress",
     "build-prod": "webpack --progress -p",
     "watch": "webpack --progress --watch",
-    "server": "webpack-dev-server --open"
+    "server": "webpack-dev-server --open",
+    "init-db": "node ./bin/init.js"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -17,6 +18,7 @@
     "express": "~4.15.5",
     "hbs": "~4.0.1",
     "morgan": "~1.9.0",
+    "mysql": "^2.15.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {

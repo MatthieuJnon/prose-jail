@@ -1,4 +1,6 @@
 var express = require('express');
+const mysql = require('mysql');
+const config = require('../config/config.json');
 var router = express.Router();
 
 /* GET home page. */
