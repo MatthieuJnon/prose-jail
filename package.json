@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-dev": "nodemon ./bin/www",    
+    "start-dev": "nodemon ./bin/www",
     "build": "webpack --progress",
     "build-prod": "webpack --progress -p",
     "watch": "webpack --progress --watch",
@@ -16,7 +16,6 @@
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "hbs": "~4.0.1",
-    "lodash": "^4.17.10",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5"
   },
