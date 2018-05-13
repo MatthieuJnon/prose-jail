@@ -78,7 +78,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ \"./node_modules/css-loader/lib/css-base.js\")(false);\n// imports\n\n\n// module\nexports.push([module.i, \"body {\\n  padding: 0;\\n  font: 14px \\\"Lucida Grande\\\", Helvetica, Arial, sans-serif; }\\n\\na {\\n  color: #00B7FF; }\\n\\nbody {\\n  background-image: url(\\\"/images/background.jpg\\\");\\n  background-size: cover; }\\n\", \"\"]);\n\n// exports\n\n\n//# sourceURL=webpack:///./public/stylesheets/src/style.scss?./node_modules/css-loader!./node_modules/sass-loader/lib/loader.js");
+eval("exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ \"./node_modules/css-loader/lib/css-base.js\")(false);\n// imports\n\n\n// module\nexports.push([module.i, \"body {\\n  padding: 0;\\n  margin: 0;\\n  font: 14px \\\"Lucida Grande\\\", Helvetica, Arial, sans-serif; }\\n\\na {\\n  color: #00B7FF; }\\n\\n#error {\\n  font-size: 20px;\\n  color: red; }\\n\\n.app-wrapper {\\n  background-image: url(\\\"/images/background.jpg\\\");\\n  background-size: cover;\\n  width: 1000px;\\n  height: 800px;\\n  border: 3px solid #b3c4e0;\\n  border-radius: 20px; }\\n\\n#jail {\\n  border: 2px solid black;\\n  position: absolute;\\n  height: 400px;\\n  width: 400px;\\n  left: 0px;\\n  border-radius: 20px; }\\n\\n.face {\\n  height: 180px; }\\n\", \"\"]);\n\n// exports\n\n\n//# sourceURL=webpack:///./public/stylesheets/src/style.scss?./node_modules/css-loader!./node_modules/sass-loader/lib/loader.js");
 
 /***/ }),
 
@@ -123,7 +123,7 @@ eval("\n/**\n * When source maps are enabled, `style-loader` uses a link element
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\n__webpack_require__(/*! ../../stylesheets/src/style.scss */ \"./public/stylesheets/src/style.scss\");\n\nvar matthieu = 'matthieu';\nconsole.log(matthieu);\n\n//# sourceURL=webpack:///./public/javascripts/src/main.js?");
+eval("\n\n__webpack_require__(/*! ../../stylesheets/src/style.scss */ \"./public/stylesheets/src/style.scss\");\n\nwindow.touchCheck = function () {\n    return window.orientation > -1;\n};\n\nfunction alertMobileUsers() {\n    if (window.touchCheck()) {\n        var error = document.getElementById(\"error\").innerText = \"It seems like you are using a device with touch, it is currently not supported.\";\n    }\n}\n\nwindow.onload = alertMobileUsers;\n\n//# sourceURL=webpack:///./public/javascripts/src/main.js?");
 
 /***/ }),
 
