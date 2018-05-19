@@ -3,15 +3,46 @@ const mysql = require('mysql');
 const config = require('../config/config.json');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'La prison de TAGMP2 !!' });
+const configMysql = config.mysql;
+const connection = mysql.createConnection({
+    host: configMysql.host,
+    user: configMysql.user,
+    password: configMysql.password,
+    database: configMysql.database
 });
 
 
-router.post('/', function (req, res, next) {
-  console.log("received post request");
-  // TODO: faire cette fonction.
+/* GET home page. */
+router.get('/', function (req, res, next) {
+    res.render('index', { title: 'La prison de TAGMP2 !!' });
+});
+
+
+function getHeads() {
+    return new Promise(function (resolve) {
+        connection.query("SELECT * FROM bolosses", function(err, res){
+            if (err) throw err;
+            resolve(res);
+        })
+    });
+}
+
+function updatePosition(AHead) {
+    return new promise(function (resolve) {
+        resolve();
+    });
+}
+
+function postHeads(headsPositions) {
+    return Promise.all(headsPositions.map(updatePosition));
+}
+
+router.get('/heads', function (req, res, next) {
+    getHeads().then((heads) => res.send(heads));
+})
+
+router.post('/heads', function (req, res, next) {
+    postHeads(req.body).then(() => res.send("All good"));
 });
 
 module.exports = router;

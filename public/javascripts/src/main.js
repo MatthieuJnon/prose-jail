@@ -20,7 +20,7 @@ class HeadsManager {
     }
     showHeads() {
         let heads = this.heads;
-        console.log(heads);
+        heads.forEach((head) => head.style.display = "inline-block");
     }
 };
 
