@@ -29,7 +29,10 @@ function getHeads() {
 
 function updatePosition(AHead) {
     return new promise(function (resolve) {
-        resolve();
+        connection.query("UPDATE bolosses SET position = ? WHERE name = ?", [AHead.position, AHead.name], function(err){
+            if (err) throw err;
+            resolve();
+        })
     });
 }
 
