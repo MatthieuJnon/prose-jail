@@ -32,8 +32,9 @@ a {
   position: absolute;
   height: 400px;
   width: 400px;
-  left: 10px;
+  left: 0;
   border-radius: 20px;
+  pointer-events: none;
 }
 
 .face {

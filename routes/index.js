@@ -28,24 +28,27 @@ function getHeads() {
 }
 
 function updatePosition(AHead) {
-    return new promise(function (resolve) {
+    return new Promise(function (resolve) {
         connection.query("UPDATE bolosses SET position = ? WHERE name = ?", [AHead.position, AHead.name], function(err){
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                throw err;
+            };
             resolve();
         })
     });
-}
-
-function postHeads(headsPositions) {
-    return Promise.all(headsPositions.map(updatePosition));
 }
 
 router.get('/heads', function (req, res, next) {
     getHeads().then((heads) => res.send(heads));
 })
 
-router.post('/heads', function (req, res, next) {
-    postHeads(req.body).then(() => res.send("All good"));
+router.post('/head', function (req, res, next) {
+    let head = {
+        position : req.body[1],
+        name : req.body[0]
+    };
+    updatePosition(head).then(() => res.send("all good"));
 });
 
 module.exports = router;
