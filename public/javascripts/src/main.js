@@ -43,56 +43,88 @@ class HeadsManager {
         document.onmousedown = faceDragStart;
     }
 
-    dragStore(name, posX, posY) {
-        this.draggedHeads.push([name,posX,posY]);
+    dragStore(name, posX, posY, mouseX, mouseY) {
+        this.draggedHeads.push({
+            name: name,
+            mousePos: {
+                x: posX,
+                y: posY
+            },
+            stylePos: {
+                x: mouseX,
+                y: mouseY
+            }
+        });
     }
 
     dragFetch() {
+        return (this.draggedHeads[0]);
+    }
+
+    dragFetchAndDelete() {
         const head = this.draggedHeads[0];
-        this.draggedHeads.splice(0,1);
-        return(head);
+        this.draggedHeads.splice(0, 1);
+        return (head);
     }
 };
 
 function faceDragStart(event) {
-    if(event.target.className === "face") {
-        window.headsManager.dragStore(event.target.id,event.clientX,event.clientY);
+    if (event.target.className === "face") {
+        const elemX = parseInt(event.target.style.left.replace("px", ""));
+        const elemY = parseInt(event.target.style.top.replace("px", ""));
+        window.headsManager.dragStore(event.target.id, event.clientX, event.clientY, elemX, elemY);
         document.onmouseup = faceDragEnd;
+        document.onmousemove = faceDrag;
     }
 }
 
-function faceDragEnd(event) {
+function faceDrag(event) {
     const initialsHeadPosition = window.headsManager.dragFetch();
-    const elemHead = document.getElementById(initialsHeadPosition[0]);
-    const diffX = event.clientX - initialsHeadPosition[1];
-    const diffY = event.clientY - initialsHeadPosition[2];
-    const elemX = parseInt(elemHead.style.left.replace("px", ""));
-    const elemY = parseInt(elemHead.style.top.replace("px", ""));
-    let newX = elemX + diffX;
-    let newY = elemY + diffY;
-    if(newX > 870) newX = 870;
-    if(newY > 620) newY = 620;
-    if(newX < 0) newX = 0;
-    if(newY < 0) newY = 0;
-    elemHead.style.left = newX + "px";
-    elemHead.style.top = newY + "px";
-    sendHead([elemHead.id, formatPosition(newX,newY)]);
-    document.onmouseup = () => false;
+    const mousePos = [event.clientX, event.clientY];
+
+    moveHead(initialsHeadPosition, mousePos);
 }
 
-function formatPosition(x,y) {
+function faceDragEnd(event) {
+    const initialsHeadPosition = window.headsManager.dragFetchAndDelete();
+    const mousePos = [event.clientX, event.clientY];
+
+    let newPos = moveHead(initialsHeadPosition, mousePos);
+
+
+    sendHead([initialsHeadPosition.name, formatPosition(newPos[0], newPos[1])]);
+    document.onmouseup = () => false;
+    document.onmousemove = () => false;
+}
+
+function moveHead(initialHead, mousePos) {
+    const elemHead = document.getElementById(initialHead.name);
+    const diffX = mousePos[0] - initialHead.mousePos.x;
+    const diffY = mousePos[1] - initialHead.mousePos.y;
+    let newX = initialHead.stylePos.x + diffX;
+    let newY = initialHead.stylePos.y + diffY;
+    if (newX > 870) newX = 870;
+    if (newY > 620) newY = 620;
+    if (newX < 0) newX = 0;
+    if (newY < 0) newY = 0;
+    elemHead.style.left = newX + "px";
+    elemHead.style.top = newY + "px";
+    return ([newX, newY]);
+}
+
+function formatPosition(x, y) {
     let posString = "";
-    if (x.toString().length === 1){
+    if (x.toString().length === 1) {
         posString = "00" + x.toString();
-    } else if (x.toString().length === 2){
+    } else if (x.toString().length === 2) {
         posString = "0" + x.toString();
     } else {
         posString = x.toString();
     }
 
-    if (y.toString().length === 1){
+    if (y.toString().length === 1) {
         posString = posString + "00" + y.toString();
-    } else if (y.toString().length === 2){
+    } else if (y.toString().length === 2) {
         posString = posString + "0" + y.toString();
     } else {
         posString = posString + y.toString();
