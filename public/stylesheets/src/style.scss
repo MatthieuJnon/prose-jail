@@ -39,4 +39,19 @@ a {
 
 .face {
   height: 180px;
+  transition: height 0.5s ease;
+}
+
+.face:hover {
+  height: 200px;
+}
+
+@keyframes growsUp {
+  from {
+    height: 180px;
+  }
+
+  to {
+    height: 200px;
+  }
 }
