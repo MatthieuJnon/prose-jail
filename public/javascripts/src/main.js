@@ -40,43 +40,44 @@ class HeadsManager {
         headElem.style.top = headPosition.position.substring(3, 6) + "px";
         headElem.style.display = "inline-block";
 
-        headElem.ondragstart = faceDragStart;
-        headElem.ondragend = faceDragEnd;
+        document.onmousedown = faceDragStart;
     }
 
     dragStore(name, posX, posY) {
         this.draggedHeads.push([name,posX,posY]);
     }
 
-    dragFetch(name) {
-        const headIndex = this.draggedHeads.findIndex(function (head) {
-            return name === head[0];
-        })
-        const head = this.draggedHeads[headIndex];
-        this.draggedHeads.splice(headIndex,1);
+    dragFetch() {
+        const head = this.draggedHeads[0];
+        this.draggedHeads.splice(0,1);
         return(head);
     }
 };
 
 function faceDragStart(event) {
-    window.headsManager.dragStore(event.srcElement.id,event.clientX,event.clientY);
+    if(event.target.className === "face") {
+        window.headsManager.dragStore(event.target.id,event.clientX,event.clientY);
+        document.onmouseup = faceDragEnd;
+    }
 }
 
 function faceDragEnd(event) {
-    const initialsHeadPosition = window.headsManager.dragFetch(event.srcElement.id);
+    const initialsHeadPosition = window.headsManager.dragFetch();
+    const elemHead = document.getElementById(initialsHeadPosition[0]);
     const diffX = event.clientX - initialsHeadPosition[1];
     const diffY = event.clientY - initialsHeadPosition[2];
-    const elemX = parseInt(event.srcElement.style.left.replace("px", ""));
-    const elemY = parseInt(event.srcElement.style.top.replace("px", ""));
+    const elemX = parseInt(elemHead.style.left.replace("px", ""));
+    const elemY = parseInt(elemHead.style.top.replace("px", ""));
     let newX = elemX + diffX;
     let newY = elemY + diffY;
     if(newX > 870) newX = 870;
     if(newY > 620) newY = 620;
     if(newX < 0) newX = 0;
     if(newY < 0) newY = 0;
-    event.srcElement.style.left = newX + "px";
-    event.srcElement.style.top = newY + "px";
-    sendHead([event.srcElement.id, formatPosition(newX,newY)]);
+    elemHead.style.left = newX + "px";
+    elemHead.style.top = newY + "px";
+    sendHead([elemHead.id, formatPosition(newX,newY)]);
+    document.onmouseup = () => false;
 }
 
 function formatPosition(x,y) {
@@ -136,6 +137,8 @@ window.onload = function () {
     alertMobileUsers();
 
     window.headsManager = new HeadsManager();
+
+    document.ondragstart = () => false;
 
     getHeads();
 
