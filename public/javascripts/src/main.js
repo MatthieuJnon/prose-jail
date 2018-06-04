@@ -7,7 +7,7 @@ window.touchCheck = function () {
 
 function alertMobileUsers() {
     if (window.touchCheck()) {
-        setError("It seems like you are using a device with touch, it is currently not supported.");
+        setError("It seems like you are using a device with touch, it is currently not fully supported.");
     }
 }
 
@@ -40,6 +40,7 @@ class HeadsManager {
         headElem.style.top = headPosition.position.substring(3, 6) + "px";
         headElem.style.display = "inline-block";
 
+        document.ontouchstart = faceDragStart;
         document.onmousedown = faceDragStart;
     }
 
@@ -72,27 +73,51 @@ function faceDragStart(event) {
     if (event.target.className === "face") {
         const elemX = parseInt(event.target.style.left.replace("px", ""));
         const elemY = parseInt(event.target.style.top.replace("px", ""));
-        window.headsManager.dragStore(event.target.id, event.clientX, event.clientY, elemX, elemY);
+        if(event.type === "touchstart") {
+            let touch = event.touches[0];
+            window.headsManager.dragStore(event.target.id, touch.clientX, touch.clientY, elemX, elemY);
+        } else {
+            window.headsManager.dragStore(event.target.id, event.clientX, event.clientY, elemX, elemY);
+        }
+        document.ontouchend = faceDragEnd;
+        document.ontouchmove = faceDrag;
         document.onmouseup = faceDragEnd;
         document.onmousemove = faceDrag;
     }
 }
 
-function faceDrag(event) {
+function faceDrag(event) {    
     const initialsHeadPosition = window.headsManager.dragFetch();
-    const mousePos = [event.clientX, event.clientY];
+    
+    let mousePos = [];
+    if(event.type === "touchmove") {
+        let touch = event.touches[0];
+        mousePos = [touch.clientX, touch.clientY];
+    } else {
+        const mousePos = [event.clientX, event.clientY];
+    }
 
     moveHead(initialsHeadPosition, mousePos);
 }
 
 function faceDragEnd(event) {
+    
     const initialsHeadPosition = window.headsManager.dragFetchAndDelete();
-    const mousePos = [event.clientX, event.clientY];
+
+    let mousePos = [];
+    if(event.type === "touchend") {
+        let touch = event.changedTouches[0];
+        mousePos = [touch.clientX, touch.clientY];
+    } else {
+        mousePos = [event.clientX, event.clientY];
+    }
 
     let newPos = moveHead(initialsHeadPosition, mousePos);
 
-
     sendHead([initialsHeadPosition.name, formatPosition(newPos[0], newPos[1])]);
+
+    document.ontouchend = () => null;
+    document.ontouchmove = () => null;
     document.onmouseup = () => false;
     document.onmousemove = () => false;
 }
@@ -114,6 +139,8 @@ function moveHead(initialHead, mousePos) {
 
 function formatPosition(x, y) {
     let posString = "";
+    x = Math.round(x);
+    y = Math.round(y);
     if (x.toString().length === 1) {
         posString = "00" + x.toString();
     } else if (x.toString().length === 2) {
@@ -138,7 +165,11 @@ function sendHead(head) {
 
     ajax.onload = function (event) {
         if (this.status !== 200) {
-            setError("There was an error while uploading a new position, error code : " + this.status);
+            if(this.status === 412) {
+                setError("You tried cheating you little sneaky goofus.");
+            } else {
+                setError("There was an error while uploading a new position, error code : " + this.status);
+            }
         }
         getHeads();
     }
@@ -171,6 +202,7 @@ window.onload = function () {
     window.headsManager = new HeadsManager();
 
     document.ondragstart = () => false;
+    document.ontouchstart = () => false;
 
     getHeads();
 
