@@ -72,6 +72,10 @@ function isHeadValid(head) {
         let x = parseInt(head.position.substring(0, 3));
         let y = parseInt(head.position.substring(3, 6));
 
+        if(isNaN(x) || isNaN(y)){
+            isValid = false;
+        }
+
         if (x > 870 || y > 620) {
             isValid = false;
         }
